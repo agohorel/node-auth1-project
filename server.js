@@ -3,20 +3,13 @@ const bcrypt = require("bcryptjs");
 const db = require("./users/user-model.js");
 const validateCreds = require("./middleware/validateCreds.js");
 const validateUser = require("./middleware/validateUser.js");
+const userRouter = require("./users/users-router.js");
 
 const server = express();
 const port = 5000;
 
 server.use(express.json());
-
-server.get("/users", validateUser, async (req, res) => {
-  try {
-    const users = await db.find();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-});
+server.use("/restricted", userRouter);
 
 server.post("/register", validateCreds, async (req, res) => {
   let { username, password } = req.body;
