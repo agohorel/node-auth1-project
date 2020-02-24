@@ -4,16 +4,16 @@ function find() {
   return db("users").select("username", "password", "id");
 }
 
-function findById(id) {
+function findBy(filter) {
   return db("users")
-    .select("username, password", "id")
-    .where({ id })
+    .select("username", "password", "id")
+    .where(filter)
     .first();
 }
 
 async function insert(data) {
-  const [id] = await "users".insert(data);
-  return findById(id);
+  const [id] = await db("users").insert(data);
+  return findBy({ id });
 }
 
-module.exports = { find, findById, insert };
+module.exports = { find, findBy, insert };
