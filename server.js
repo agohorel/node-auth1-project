@@ -28,6 +28,8 @@ server.post("/register", validateCreds, async (req, res) => {
 
 server.post("/login", [validateCreds, validateUser], async (req, res) => {
   try {
+    const userData = await db.findBy({ username: req.body.username });
+    res.cookie("user_id", userData.id);
     res.status(200).json({ msg: `welcome, ${req.body.username}!` });
   } catch (error) {
     res.status(500).json({ error });
