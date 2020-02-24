@@ -2,12 +2,19 @@ const bcrypt = require("bcryptjs");
 const db = require("../users/user-model.js");
 
 module.exports = async (req, res, next) => {
-  const { username, password } = req.headers;
+  let user, pass;
+  if (req.headers.username && req.headers.password) {
+    user = req.headers.username;
+    pass = req.headers.password;
+  } else {
+    user = req.body.username;
+    pass = req.body.password;
+  }
 
-  if (username && password) {
+  if (user && pass) {
     try {
-      const user = await db.findBy({ username }).first();
-      if (user && bcrypt.compareSync(password, user.password)) {
+      const userData = await db.findBy({ username: user }).first();
+      if (userData && bcrypt.compareSync(pass, userData.password)) {
         next();
       } else {
         res.status(401).json({ msg: "You shall not pass!" });
