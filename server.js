@@ -33,10 +33,10 @@ server.post("/register", validateCreds, async (req, res) => {
   }
 });
 
-server.post("/login", validateCreds, async (req, res) => {
+server.post("/login", [validateCreds, validateUser], async (req, res) => {
   try {
+    res.status(200).json({ msg: `welcome, ${req.body.username}!` });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error });
   }
 });
