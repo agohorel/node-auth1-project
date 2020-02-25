@@ -2,6 +2,8 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const KnexStore = require("connect-session-knex")(session);
+const cors = require("cors");
+const helmet = require("helmet");
 
 const db = require("./users/user-model.js");
 const validateCreds = require("./middleware/validateCreds.js");
@@ -29,6 +31,8 @@ const sessionConfig = {
   })
 };
 
+server.use(helmet());
+server.use(cors());
 server.use(express.json());
 server.use(session(sessionConfig));
 server.use("/restricted", userRouter);
